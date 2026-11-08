@@ -96,7 +96,7 @@
     <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_SeeAnswer" targetRef="EndEvent_AnswerSeen"/>
 
     <bpmn:textAnnotation id="Annotation_Observed">
-      <bpmn:text>Наблюдение покупателя: Ozon и Wildberries, лето 2026, около двух отправок суммарно. Ответ продавца был не всегда.</bpmn:text>
+      <bpmn:text>Наблюдение покупателя: Ozon и Wildberries, 13 июля 2026 года утром, около двух отправок суммарно. Ответ продавца был не всегда.</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_Observed" sourceRef="Task_SendQuestion" targetRef="Annotation_Observed"/>
     <bpmn:textAnnotation id="Annotation_Inferred">
