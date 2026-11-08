@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  id="Definitions_MarketplaceQuestions" targetNamespace="https://example.org/marketplace-moderation">
+  <bpmn:process id="Process_ProductQuestion" name="Вопрос покупателя о товаре — as-is" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_Buyer" name="Покупатель">
+        <bpmn:flowNodeRef>StartEvent_Buyer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_OpenProduct</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_WriteQuestion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SendQuestion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SeeAnswer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_AnswerSeen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_NoAnswer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SeeRejection</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_Rejected</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Platform" name="Площадка (внутренние шаги не видны покупателю)">
+        <bpmn:flowNodeRef>Task_CheckQuestion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_QuestionAllowed</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CheckAndPublishAnswer</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Seller" name="Продавец">
+        <bpmn:flowNodeRef>Task_ReceiveQuestion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_SellerResponds</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_WriteAnswer</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="StartEvent_Buyer" name="Нужна информация о товаре">
+      <bpmn:outgoing>Flow_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_OpenProduct" name="Открыть карточку товара">
+      <bpmn:incoming>Flow_01</bpmn:incoming><bpmn:outgoing>Flow_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_WriteQuestion" name="Сформулировать вопрос">
+      <bpmn:incoming>Flow_02</bpmn:incoming><bpmn:outgoing>Flow_03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_SendQuestion" name="Отправить вопрос через интерфейс">
+      <bpmn:incoming>Flow_03</bpmn:incoming><bpmn:outgoing>Flow_04</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_CheckQuestion" name="Проверить вопрос по правилам площадки (скрытый шаг)">
+      <bpmn:incoming>Flow_04</bpmn:incoming><bpmn:outgoing>Flow_05</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_QuestionAllowed" name="Вопрос допущен к публикации?" default="Flow_07">
+      <bpmn:incoming>Flow_05</bpmn:incoming><bpmn:outgoing>Flow_06</bpmn:outgoing><bpmn:outgoing>Flow_07</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_SeeRejection" name="Увидеть отказ / вопрос не опубликован">
+      <bpmn:incoming>Flow_07</bpmn:incoming><bpmn:outgoing>Flow_08</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_Rejected" name="Процесс завершён без публикации">
+      <bpmn:incoming>Flow_08</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Task_ReceiveQuestion" name="Получить вопрос в кабинете продавца">
+      <bpmn:incoming>Flow_06</bpmn:incoming><bpmn:outgoing>Flow_09</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_SellerResponds" name="Продавец ответил?" default="Flow_11">
+      <bpmn:incoming>Flow_09</bpmn:incoming><bpmn:outgoing>Flow_10</bpmn:outgoing><bpmn:outgoing>Flow_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_WriteAnswer" name="Подготовить и отправить ответ">
+      <bpmn:incoming>Flow_10</bpmn:incoming><bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_CheckAndPublishAnswer" name="Проверить и разместить ответ (если применимо)">
+      <bpmn:incoming>Flow_12</bpmn:incoming><bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_SeeAnswer" name="Получить / увидеть ответ продавца">
+      <bpmn:incoming>Flow_13</bpmn:incoming><bpmn:outgoing>Flow_14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_AnswerSeen" name="Ответ получен">
+      <bpmn:incoming>Flow_14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_NoAnswer" name="Ответ не получен в период наблюдения">
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_01" sourceRef="StartEvent_Buyer" targetRef="Task_OpenProduct"/>
+    <bpmn:sequenceFlow id="Flow_02" sourceRef="Task_OpenProduct" targetRef="Task_WriteQuestion"/>
+    <bpmn:sequenceFlow id="Flow_03" name="текст вопроса" sourceRef="Task_WriteQuestion" targetRef="Task_SendQuestion"/>
+    <bpmn:sequenceFlow id="Flow_04" name="текст вопроса" sourceRef="Task_SendQuestion" targetRef="Task_CheckQuestion"/>
+    <bpmn:sequenceFlow id="Flow_05" sourceRef="Task_CheckQuestion" targetRef="Gateway_QuestionAllowed"/>
+    <bpmn:sequenceFlow id="Flow_06" name="да: опубликованный вопрос" sourceRef="Gateway_QuestionAllowed" targetRef="Task_ReceiveQuestion">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">approved</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_07" name="нет: статус отказа / непубликации" sourceRef="Gateway_QuestionAllowed" targetRef="Task_SeeRejection"/>
+    <bpmn:sequenceFlow id="Flow_08" sourceRef="Task_SeeRejection" targetRef="EndEvent_Rejected"/>
+    <bpmn:sequenceFlow id="Flow_09" sourceRef="Task_ReceiveQuestion" targetRef="Gateway_SellerResponds"/>
+    <bpmn:sequenceFlow id="Flow_10" name="да: запрос на ответ" sourceRef="Gateway_SellerResponds" targetRef="Task_WriteAnswer">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">answered</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_11" name="нет ответа в период наблюдения" sourceRef="Gateway_SellerResponds" targetRef="EndEvent_NoAnswer"/>
+    <bpmn:sequenceFlow id="Flow_12" name="текст ответа продавца" sourceRef="Task_WriteAnswer" targetRef="Task_CheckAndPublishAnswer"/>
+    <bpmn:sequenceFlow id="Flow_13" name="опубликованный ответ / уведомление" sourceRef="Task_CheckAndPublishAnswer" targetRef="Task_SeeAnswer"/>
+    <bpmn:sequenceFlow id="Flow_14" sourceRef="Task_SeeAnswer" targetRef="EndEvent_AnswerSeen"/>
+
+    <bpmn:textAnnotation id="Annotation_Observed">
+      <bpmn:text>Наблюдение покупателя: Ozon и Wildberries, 13 июля 2026 года утром, около двух отправок суммарно. Ответ продавца был не всегда.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Observed" sourceRef="Task_SendQuestion" targetRef="Annotation_Observed"/>
+    <bpmn:textAnnotation id="Annotation_Inferred">
+      <bpmn:text>Внутренняя проверка, причины непубликации и очередь продавца покупателю не видны. Эти этапы и ветка отказа — реконструкция по пользовательскому результату и правилам площадок, не прямое наблюдение.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_Inferred" sourceRef="Task_CheckQuestion" targetRef="Annotation_Inferred"/>
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_ProductQuestion">
+      <bpmndi:BPMNShape id="Lane_Buyer_di" bpmnElement="Lane_Buyer" isHorizontal="true"><dc:Bounds x="40" y="60" width="1450" height="180"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Platform_di" bpmnElement="Lane_Platform" isHorizontal="true"><dc:Bounds x="40" y="240" width="1450" height="190"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Seller_di" bpmnElement="Lane_Seller" isHorizontal="true"><dc:Bounds x="40" y="430" width="1450" height="180"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_Buyer_di" bpmnElement="StartEvent_Buyer"><dc:Bounds x="90" y="130" width="36" height="36"/><bpmndi:BPMNLabel><dc:Bounds x="51" y="169" width="115" height="34"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpenProduct_di" bpmnElement="Task_OpenProduct"><dc:Bounds x="160" y="108" width="130" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_WriteQuestion_di" bpmnElement="Task_WriteQuestion"><dc:Bounds x="320" y="108" width="130" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SendQuestion_di" bpmnElement="Task_SendQuestion"><dc:Bounds x="480" y="108" width="145" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CheckQuestion_di" bpmnElement="Task_CheckQuestion"><dc:Bounds x="665" y="295" width="175" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_QuestionAllowed_di" bpmnElement="Gateway_QuestionAllowed" isMarkerVisible="true"><dc:Bounds x="885" y="310" width="50" height="50"/><bpmndi:BPMNLabel><dc:Bounds x="848" y="365" width="125" height="40"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SeeRejection_di" bpmnElement="Task_SeeRejection"><dc:Bounds x="1015" y="260" width="150" height="70"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Rejected_di" bpmnElement="EndEvent_Rejected"><dc:Bounds x="1225" y="277" width="36" height="36"/><bpmndi:BPMNLabel><dc:Bounds x="1202" y="316" width="90" height="38"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReceiveQuestion_di" bpmnElement="Task_ReceiveQuestion"><dc:Bounds x="1015" y="480" width="150" height="70"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_SellerResponds_di" bpmnElement="Gateway_SellerResponds" isMarkerVisible="true"><dc:Bounds x="1220" y="490" width="50" height="50"/><bpmndi:BPMNLabel><dc:Bounds x="1205" y="545" width="85" height="28"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_WriteAnswer_di" bpmnElement="Task_WriteAnswer"><dc:Bounds x="1320" y="465" width="145" height="70"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CheckAndPublishAnswer_di" bpmnElement="Task_CheckAndPublishAnswer"><dc:Bounds x="1320" y="295" width="150" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SeeAnswer_di" bpmnElement="Task_SeeAnswer"><dc:Bounds x="1300" y="108" width="130" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_AnswerSeen_di" bpmnElement="EndEvent_AnswerSeen"><dc:Bounds x="1450" y="130" width="36" height="36"/><bpmndi:BPMNLabel><dc:Bounds x="1430" y="168" width="80" height="25"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_NoAnswer_di" bpmnElement="EndEvent_NoAnswer"><dc:Bounds x="1325" y="555" width="36" height="36"/><bpmndi:BPMNLabel><dc:Bounds x="1280" y="593" width="130" height="30"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_Observed_di" bpmnElement="Annotation_Observed"><dc:Bounds x="310" y="30" width="345" height="60"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Annotation_Inferred_di" bpmnElement="Annotation_Inferred"><dc:Bounds x="650" y="610" width="660" height="60"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_01_di" bpmnElement="Flow_01"><di:waypoint x="126" y="148"/><di:waypoint x="160" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02_di" bpmnElement="Flow_02"><di:waypoint x="290" y="148"/><di:waypoint x="320" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03_di" bpmnElement="Flow_03"><di:waypoint x="450" y="148"/><di:waypoint x="480" y="148"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04_di" bpmnElement="Flow_04"><di:waypoint x="625" y="148"/><di:waypoint x="645" y="148"/><di:waypoint x="645" y="335"/><di:waypoint x="665" y="335"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05_di" bpmnElement="Flow_05"><di:waypoint x="840" y="335"/><di:waypoint x="885" y="335"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06_di" bpmnElement="Flow_06"><di:waypoint x="935" y="335"/><di:waypoint x="970" y="335"/><di:waypoint x="970" y="515"/><di:waypoint x="1015" y="515"/><bpmndi:BPMNLabel><dc:Bounds x="945" y="406" width="20" height="20"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07_di" bpmnElement="Flow_07"><di:waypoint x="910" y="310"/><di:waypoint x="910" y="295"/><di:waypoint x="1015" y="295"/><bpmndi:BPMNLabel><dc:Bounds x="935" y="271" width="110" height="20"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08_di" bpmnElement="Flow_08"><di:waypoint x="1165" y="295"/><di:waypoint x="1225" y="295"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09_di" bpmnElement="Flow_09"><di:waypoint x="1165" y="515"/><di:waypoint x="1220" y="515"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10"><di:waypoint x="1270" y="515"/><di:waypoint x="1320" y="500"/><bpmndi:BPMNLabel><dc:Bounds x="1280" y="488" width="20" height="20"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11"><di:waypoint x="1245" y="540"/><di:waypoint x="1245" y="573"/><di:waypoint x="1325" y="573"/><bpmndi:BPMNLabel><dc:Bounds x="1247" y="545" width="100" height="20"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12"><di:waypoint x="1392" y="465"/><di:waypoint x="1392" y="375"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13"><di:waypoint x="1395" y="295"/><di:waypoint x="1395" y="188"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14"><di:waypoint x="1430" y="148"/><di:waypoint x="1450" y="148"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
