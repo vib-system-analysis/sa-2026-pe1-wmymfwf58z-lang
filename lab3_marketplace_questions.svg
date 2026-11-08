@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1580" height="700" viewBox="0 0 1580 700" role="img" aria-labelledby="title desc">
+  <title id="title">Вопрос покупателя о товаре: процесс as-is</title>
+  <desc id="desc">Покупатель задает вопрос на Ozon или Wildberries, платформа проверяет его, продавец может ответить, а платформа размещает ответ.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L10,5 L0,10 z" fill="#344054"/></marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #202b38; }
+      .lane { stroke: #9aa8b6; stroke-width: 1.5; }
+      .task { fill: #ffffff; stroke: #344054; stroke-width: 2; rx: 8; }
+      .hidden { fill: #fff6db; stroke: #a76c00; stroke-width: 2; stroke-dasharray: 7 5; rx: 8; }
+      .gateway { fill: #ffffff; stroke: #344054; stroke-width: 2; }
+      .flow { fill: none; stroke: #344054; stroke-width: 2; marker-end: url(#arrow); }
+      .association { fill: none; stroke: #78889a; stroke-width: 1.5; stroke-dasharray: 4 4; }
+      .small { font-size: 13px; }
+      .label { font-size: 15px; text-anchor: middle; }
+      .lane-title { font-size: 15px; font-weight: bold; }
+    </style>
+  </defs>
+  <rect width="1580" height="700" fill="#f7f9fb"/>
+  <text x="45" y="33" font-size="23" font-weight="bold">Вопрос покупателя о товаре: процесс as-is</text>
+  <rect x="360" y="47" width="650" height="52" fill="#eef4f8" stroke="#9aa8b6" rx="4"/>
+  <text x="375" y="68" class="small">Наблюдение покупателя: Ozon и Wildberries, лето 2026, около двух отправок суммарно.</text>
+  <text x="375" y="87" class="small">Ответ продавца получен не всегда; точное распределение случаев по площадкам не записано.</text>
+
+  <rect class="lane" x="35" y="115" width="1510" height="150" fill="#eaf3f8"/>
+  <rect class="lane" x="35" y="265" width="1510" height="190" fill="#f4f6f8"/>
+  <rect class="lane" x="35" y="455" width="1510" height="155" fill="#edf5ed"/>
+  <text class="lane-title" x="48" y="138">Покупатель</text>
+  <text class="lane-title" x="48" y="288">Площадка</text>
+  <text class="small" x="48" y="307">(внутренние шаги не видны)</text>
+  <text class="lane-title" x="48" y="478">Продавец</text>
+
+  <circle cx="90" cy="195" r="18" fill="#fff" stroke="#344054" stroke-width="2"/>
+  <text x="90" y="233" class="small" text-anchor="middle">Нужен ответ</text>
+  <rect class="task" x="130" y="163" width="130" height="65"/>
+  <text class="label" x="195" y="190"><tspan x="195">Открыть</tspan><tspan x="195" dy="20">карточку товара</tspan></text>
+  <rect class="task" x="285" y="163" width="135" height="65"/>
+  <text class="label" x="352" y="190"><tspan x="352">Сформулировать</tspan><tspan x="352" dy="20">вопрос</tspan></text>
+  <rect class="task" x="445" y="163" width="145" height="65"/>
+  <text class="label" x="517" y="190"><tspan x="517">Отправить через</tspan><tspan x="517" dy="20">интерфейс</tspan></text>
+
+  <rect class="hidden" x="635" y="325" width="180" height="70"/>
+  <text class="label" x="725" y="350"><tspan x="725">Проверка вопроса</tspan><tspan x="725" dy="19">по правилам*</tspan></text>
+  <polygon class="gateway" points="865,335 890,360 865,385 840,360"/>
+  <text x="865" y="366" font-size="20" text-anchor="middle">×</text>
+  <text x="865" y="412" class="small" text-anchor="middle">Допущен?</text>
+  <rect class="task" x="950" y="283" width="160" height="62"/>
+  <text class="label" x="1030" y="308"><tspan x="1030">Видит, что вопрос</tspan><tspan x="1030" dy="19">не опубликован</tspan></text>
+  <circle cx="1160" cy="314" r="17" fill="#fff" stroke="#344054" stroke-width="3"/>
+  <text x="1160" y="348" class="small" text-anchor="middle">Конец</text>
+  <rect class="task" x="950" y="493" width="160" height="62"/>
+  <text class="label" x="1030" y="518"><tspan x="1030">Получить вопрос</tspan><tspan x="1030" dy="19">в кабинете</tspan></text>
+
+  <polygon class="gateway" points="1145,499 1170,524 1145,549 1120,524"/>
+  <text x="1145" y="530" font-size="20" text-anchor="middle">×</text>
+  <text x="1145" y="571" class="small" text-anchor="middle">Ответил?</text>
+  <rect class="task" x="1200" y="478" width="145" height="62"/>
+  <text class="label" x="1272" y="503"><tspan x="1272">Написать</tspan><tspan x="1272" dy="19">ответ</tspan></text>
+  <circle cx="1295" cy="582" r="17" fill="#fff" stroke="#344054" stroke-width="3"/>
+  <text x="1295" y="609" class="small" text-anchor="middle">Ответ не получен</text>
+
+  <rect class="hidden" x="1190" y="325" width="170" height="70"/>
+  <text class="label" x="1275" y="350"><tspan x="1275">Проверить и</tspan><tspan x="1275" dy="19">разместить ответ*</tspan></text>
+  <rect class="task" x="1370" y="163" width="125" height="65"/>
+  <text class="label" x="1432" y="190"><tspan x="1432">Увидеть</tspan><tspan x="1432" dy="20">ответ</tspan></text>
+  <circle cx="1520" cy="195" r="18" fill="#fff" stroke="#344054" stroke-width="3"/>
+  <text x="1520" y="233" class="small" text-anchor="middle">Конец</text>
+
+  <path class="flow" d="M108 195 H130"/><path class="flow" d="M260 195 H285"/><path class="flow" d="M420 195 H445"/>
+  <path class="flow" d="M590 195 H612 V360 H635"/>
+  <text x="615" y="250" class="small">текст вопроса</text>
+  <path class="flow" d="M815 360 H840"/>
+  <path class="flow" d="M865 335 V314 H950"/><text x="905" y="304" class="small">нет: отказ</text>
+  <path class="flow" d="M865 385 V524 H950"/><text x="876" y="446" class="small">да: вопрос</text>
+  <path class="flow" d="M1110 314 H1143"/>
+  <path class="flow" d="M1110 524 H1120"/>
+  <path class="flow" d="M1170 524 H1200"/><text x="1178" y="510" class="small">да</text>
+  <path class="flow" d="M1145 549 V582 H1278"/><text x="1151" y="571" class="small">нет</text>
+  <path class="flow" d="M1272 478 V395"/><text x="1280" y="438" class="small">текст ответа</text>
+  <path class="flow" d="M1360 360 H1385 V195 H1370"/><text x="1390" y="250" class="small">ответ + уведомление</text>
+  <path class="flow" d="M1495 195 H1502"/>
+
+  <rect x="55" y="635" width="1470" height="48" fill="#fff6db" stroke="#d8ad4c" rx="4"/>
+  <text x="70" y="655" class="small">* Скрытая проверка и отказ — реконструкция по пользовательскому результату и правилам площадок, напрямую не наблюдались.</text>
+  <text x="70" y="674" class="small">Модель объединяет общий пользовательский маршрут Ozon и WB; внутренние этапы и сроки могут различаться.</text>
+</svg>
